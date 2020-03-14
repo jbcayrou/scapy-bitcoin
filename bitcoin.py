@@ -468,7 +468,7 @@ class BitcoinVersion(BitcoinMessage):
         ConditionalField(LEIntField("start_height",0), lambda pkt : pkt.version >= 106),
 
         # Fields below require version >= 70001
-        ConditionalField(ByteField("relay", 0), lambda pkt : pkt.version >=7001)
+        ConditionalField(ByteField("relay", 0), lambda pkt : pkt.version >= 70001)
     ]
 
 
