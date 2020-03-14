@@ -123,7 +123,7 @@ class ChecksumField(XIntField):
     def i2m(self, pkt, x):
         if x is None:
             pay = str(getattr(pkt,"payload",""))
-            x = hashlib.sha256(hashlib.sha256(pay).digest()).digest()
+            x = hashlib.sha256((hashlib.sha256(pay.encode('utf-8')).digest())).digest()
             x = struct.unpack(self.fmt, x[0:4])[0]
 
         return x
@@ -258,7 +258,7 @@ class VarStrPktField(Packet):
     Variable length string can be stored using a variable length integer followed by the string itself.
     """
 
-    fields_desc = [ 
+    fields_desc = [
             VarIntField("len",None, length_of="data"),
             StrLenField("data","", length_from= lambda pkt : pkt.len),
         ]
@@ -299,7 +299,7 @@ class AddrWithoutTimePktField(Packet):
         if hasattr(self, "addr"):
             if getattr(self, "addr") is None:
                 self.addr = "localhost"
-        
+
         return Packet.build(self)
 
     def extract_padding(self, s):
@@ -394,7 +394,7 @@ class BitcoinHdr(Packet):
     ]
 
     def build(self):
-        # If len is None, set it before build 
+        # If len is None, set it before build
         if self.len is None:
             self.len = len(self.payload)
 
@@ -570,7 +570,7 @@ class BitcoinTx(BitcoinMessage):
         PacketListField("tx_in", [], TxInPktField, count_from=lambda pkt : pkt.tx_in_count), # TODO
         VarIntField("tx_out_count",None, count_of="tx_out"),
         PacketListField("tx_out", [], TxOutPktField, count_from=lambda pkt : pkt.tx_out_count), # TODO
-        LockTimeField("lock_time", None), 
+        LockTimeField("lock_time", None),
     ]
 
 
@@ -737,7 +737,7 @@ class BitcoinAlert(BitcoinMessage):
     """
     Alert messages are signed by developpers of Satoshi's client.
     Signature is an ECDSA of the BitcoinAlertPayload
-    """ 
+    """
     cmd = "alert"
 
     fields_desc = [
