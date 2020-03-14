@@ -459,9 +459,9 @@ class BitcoinVersion(BitcoinMessage):
         LEIntField("version",0),
         LELongEnumField("services",0, SERVICES_TYPES),
         LTimestampField("timestamp",int(time.time())),
+        PacketField("addr_recv", AddrWithoutTimePktField(), AddrWithoutTimePktField),
 
         # Fields below require version >= 106
-        ConditionalField(PacketField("addr_recv", AddrWithoutTimePktField(), AddrWithoutTimePktField), lambda pkt : pkt.version >= 106),
         ConditionalField(PacketField("addr_from", AddrWithoutTimePktField(), AddrWithoutTimePktField), lambda pkt : pkt.version >= 106),
         ConditionalField(LELongField("nonce", 0 ), lambda pkt : pkt.version >= 106),
         ConditionalField(PacketField("user_agent", VarStrPktField(), VarStrPktField), lambda pkt : pkt.version >= 106),
