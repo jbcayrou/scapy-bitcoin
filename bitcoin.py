@@ -498,8 +498,8 @@ class BitcoinInv(BitcoinMessage):
     cmd = "inv"
 
     fields_desc = [
-        VarIntField("count",None, count_of="inventroy"),
-        PacketListField("inventroy", [], InventoryPktField, count_from=lambda pkt: pkt.count),
+        VarIntField("count",None, count_of="inventory"),
+        PacketListField("inventory", [], InventoryPktField, count_from=lambda pkt: pkt.count),
     ]
 
 
@@ -510,8 +510,8 @@ class BitcoinGetdata(BitcoinMessage):
     cmd = "getdata"
 
     fields_desc = [
-        VarIntField("count",None, count_of="inventroy"),
-        PacketListField("inventroy", [], InventoryPktField, count_from=lambda pkt: pkt.count),
+        VarIntField("count",None, count_of="inventory"),
+        PacketListField("inventory", [], InventoryPktField, count_from=lambda pkt: pkt.count),
     ]
 
 
@@ -523,8 +523,8 @@ class BitcoinNotfound(BitcoinMessage):
     cmd = "notfound"
 
     fields_desc = [
-        VarIntField("count",None, count_of="inventroy"),
-        PacketListField("inventroy", [], InventoryPktField, count_from=lambda pkt: pkt.count),
+        VarIntField("count",None, count_of="inventory"),
+        PacketListField("inventory", [], InventoryPktField, count_from=lambda pkt: pkt.count),
     ]
 
 
