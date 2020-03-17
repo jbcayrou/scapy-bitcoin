@@ -786,6 +786,19 @@ class BitcoinFilterclear(BitcoinMessage):
     ]
 
 
+class BitcoinFeefilter(BitcoinMessage):
+    """
+    Added in protocol version 70013 as described by BIP133.
+
+    The feefilter message is a request to the receiving peer to not relay any transaction inv messages to the sending peer where the fee rate for the transaction is below the fee rate specified in the feefilter message.
+    """
+    cmd = "feefilter"
+
+    fields_desc = [
+        XLELongField("feerate", 0),
+    ]
+
+
 class BitcoinAlertPayload(Packet):
     """
     Support for alert messages has been removed from bitcoin core in March 2016.
