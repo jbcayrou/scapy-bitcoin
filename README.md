@@ -1,6 +1,8 @@
 # Bitcoin packets for Scapy
 Implementation of Bitcoin protocol messages in Scapy.
 
+**The script runs only under phyton 2.x**
+
 All Bitcoin messages are built as follwing :
 ```python
 BitcoinHdr() / BitcoinMessage()
