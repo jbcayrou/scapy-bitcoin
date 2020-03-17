@@ -326,10 +326,9 @@ class BlockHeaderPktField(Packet):
         LEIntField("version",0),
         StrFixedLenField("prev_block", "", length=32),
         StrFixedLenField("merkle_root", "", length=32),
-        LTimestampField("timestamp",int(time.time())),
+        TimestampField("timestamp",int(time.time())),
         LEIntField("bits",0), # The calculated difficulty target being used for this block
-        LELongField("nonce", 0 ),
-        #VarIntField("txn_count",0),
+        LEIntField("nonce", 0)
     ]
 
     def extract_padding(self, s):
