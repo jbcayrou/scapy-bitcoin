@@ -741,49 +741,43 @@ class BitcoinReject(BitcoinMessage):
     ]
 
 
-# Flowing Bloom filter messages are describe here : https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki
-
-
 class BitcoinFilterload(BitcoinMessage):
+    """
+    Added in protocol version 70001.
+
+    The filterload message tells the receiving peer to filter all relayed transactions and requested merkle blocks through the provided filter.
+    """
+
     cmd = "filterload"
 
     fields_desc = [
-        StrLenField(
-            "filter", "", length_from=lambda pkt: pkt.underlayer.len - 9
-        ),  # The maximum size is 36,000 bytes
-        XLEIntField(
-            "n_hash_functs", 0
-        ),  # The maximum value allowed in this field is 50
+        PacketField("filter", VarStrPktField(), VarStrPktField),
+        XLEIntField("n_hash_functs", 0),
         XLEIntField("n_tweak", 0),
         XByteField("n_flags", 0),
     ]
 
 
 class BitcoinFilteradd(BitcoinMessage):
+    """
+    Added in protocol version 70001.
+
+    The filteradd message tells the receiving peer to add a single element to a previously-set bloom filter, such as a new public key.
+    """
+
     cmd = "filteradd"
 
-    fields_desc = [StrLenField("filter", "")]
+    fields_desc = [PacketField("filter", VarStrPktField(), VarStrPktField)]
 
 
 class BitcoinFilterclear(BitcoinMessage):
-    cmd = "filterclear"
+    """
+    Added in protocol version 70001.
 
-    fields_desc = [
-        LEIntField("version", 0),
-        HashField("prev_block", 0),
-        HashField("merkel_block", 0),
-        TimestampField("timestamp", int(time.time())),
-        LEIntField(
-            "bits", 0
-        ),  # The calculated difficulty target being used for this block
-        XLEIntField("nonce", 0),
-        LEIntField("nb_transactions", 0),
-        VarIntField("len_hashes", None, count_of="hashes"),
-        FieldListField(
-            "hashes", [], HashField("hash", None), count_from=lambda pkt: pkt.len_hashes
-        ),
-        StrLenField("flags", ""),
-    ]
+    The filterclear message tells the receiving peer to remove a previously-set bloom filter. This also undoes the effect of setting the relay field in the version message to 0, allowing unfiltered access to inv messages announcing new transactions.
+    """
+
+    cmd = "filterclear"
 
 
 class BitcoinMerkleblock(BitcoinMessage):
