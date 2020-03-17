@@ -592,11 +592,11 @@ class BitcoinBlock(BitcoinMessage):
     ]
 
 
-class BitcoinHeader(BitcoinMessage):
+class BitcoinHeaders(BitcoinMessage):
     """
     The headers packet returns block headers in response to a getheaders packet.
     """
-    cmd = "header"
+    cmd = "headers"
 
     fields_desc = [
         VarIntField("count",None, count_of="headers"),
