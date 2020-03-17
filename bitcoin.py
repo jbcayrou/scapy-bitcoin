@@ -786,16 +786,135 @@ class BitcoinFilterclear(BitcoinMessage):
     ]
 
 
+class BitcoinMerkleblock(BitcoinMessage):
+    """
+    Added in protocol version 70001.
+
+    The merkleblock message is a reply to a getdata message which requested a block using the inventory type MSG_MERKLEBLOCK. It is only part of the reply: if any matching transactions are found, they will be sent separately as tx messages.
+    """
+
+    cmd = "merkleblock"
+
+    fields_desc = [
+        PacketField("block_header", BlockHeaderPktField(), BlockHeaderPktField),
+        LEIntField("transaction_count", 0),
+        VarIntField("hash_count", None, count_of="hashes"),
+        FieldListField(
+            "hashes", [], HashField("", None), count_from=lambda pkt: pkt.len_hashes
+        ),
+        VarIntField("flag_byte_count", None, count_of="flags"),
+        FieldListField(
+            "flags", [], ByteField("", None), count_from=lambda pkt: pkt.flag_byte_count
+        ),
+    ]
+
+
 class BitcoinFeefilter(BitcoinMessage):
     """
-    Added in protocol version 70013 as described by BIP133.
+    Added in protocol version 70013.
 
     The feefilter message is a request to the receiving peer to not relay any transaction inv messages to the sending peer where the fee rate for the transaction is below the fee rate specified in the feefilter message.
     """
+
     cmd = "feefilter"
 
     fields_desc = [
         XLELongField("feerate", 0),
+    ]
+
+
+class BitcoinSendcmpct(BitcoinMessage):
+    """
+    Added in protocol version 70014.
+
+    Nodes should check for a protocol version of >= 70014 before sending sendcmpct messages.
+    """
+
+    cmd = "sendcmpct"
+
+    fields_desc = [
+        ByteField("announce", 0),
+        XLELongField("version", 70014),
+    ]
+
+
+class PrefilledTxn(Packet):
+    """
+    Added in protocol version 70014.
+
+    The cmpctblock message contains a vector of PrefilledTransaction.
+    """
+
+    fields_desc = [
+        VarIntField("index", 0,),
+        PacketField("txn", BitcoinTx(), BitcoinTx),
+    ]
+
+    def extract_padding(self, s):
+        return "", s
+
+
+class BitcoinCmpctblock(BitcoinMessage):
+    """
+    Added in protocol version 70014.
+
+    The cmpctblock message is a reply to a getdata message which requested a block using the inventory type MSG_CMPCT_BLOCK.
+    """
+
+    cmd = "cmpctblock"
+
+    fields_desc = [
+        PacketField("block_header", BlockHeaderPktField(), BlockHeaderPktField),
+        LELongField("nonce", 0),
+        VarIntField("shortids_length", None, count_of="shortids"),
+        FieldListField(
+            "shortids",
+            [],
+            LELongField("", None),
+            count_from=lambda pkt: pkt.shortids_length,
+        ),
+        VarIntField("prefilled_txn_lenght", None, count_of="prefilled_txn"),
+        PacketListField(
+            "prefilled_txn",
+            [],
+            PrefilledTxn,
+            count_from=lambda pkt: pkt.prefilled_txn_lenght,
+        ),
+    ]
+
+
+class BitcoinGetblocktxn(BitcoinMessage):
+    """
+    Added in protocol version 70014.
+
+    A blocktxn message response must contain exactly and only each transaction which is present in the appropriate block at the index specified in the getblocktxn message indexes list, in the order requested.
+    """
+
+    cmd = "getblocktxn"
+
+    fields_desc = [
+        HashField("block_hash", 0),
+        VarIntField("indexes_length", None, count_of="indexes"),
+        FieldListField(
+            "indexes",
+            [],
+            VarIntField("", None),
+            count_from=lambda pkt: pkt.indexes_length,
+        ),
+    ]
+
+
+class BitcoinBlocktxn(BitcoinMessage):
+    """
+    Added in protocol version 70014.
+    """
+
+    cmd = "blocktxn"
+
+    fields_desc = [
+        HashField("block_hash", 0),
+        VarIntField("transactions_length", None, count_of="transactions"),
+        PacketListField("transactions", [], BitcoinTx),
     ]
 
 
