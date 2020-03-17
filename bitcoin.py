@@ -123,7 +123,7 @@ class ChecksumField(XIntField):
     def i2m(self, pkt, x):
         if x is None:
             pay = str(getattr(pkt,"payload",""))
-            x = hashlib.sha256((hashlib.sha256(pay.encode('utf-8')).digest())).digest()
+            x = hashlib.sha256((hashlib.sha256(pay).digest())).digest()
             x = struct.unpack(self.fmt, x[0:4])[0]
 
         return x
@@ -198,15 +198,15 @@ class VarIntField(FieldLenField):
     -                   9            0xFF followed by the length as uint64_t
     """
 
-    def __init__(self, name, default, length_of=None, count_of=None):
-        FieldLenField.__init__(self, name, default, fmt="B",length_of=length_of,count_of=count_of)
+    def __init__(self, name, default, count_of=None):
+        FieldLenField.__init__(self, name, default, fmt="B", count_of=count_of)
 
     def i2m(self, pkt, x):
         if x is None:
-            if self.length_of is not None:
-                fld,fval = pkt.getfield_and_val(self.length_of)
-                f = fld.i2len(pkt, fval)
-            x = f
+            if self.count_of is not None:
+                x = len(getattr(pkt, self.count_of))
+            else:
+                x = 0
         return x
 
     def getfield(self, pkt, s):
@@ -259,7 +259,7 @@ class VarStrPktField(Packet):
     """
 
     fields_desc = [
-            VarIntField("len",None, length_of="data"),
+            VarIntField("len",None, count_of="data"),
             StrLenField("data","", length_from= lambda pkt : pkt.len),
         ]
 
