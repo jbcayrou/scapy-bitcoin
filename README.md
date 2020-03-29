@@ -13,31 +13,38 @@ A binding is done between the *BitcoinHdr.cmd* and the good *BitcoinMessage* (wh
 
 command     | class
 ------------|----------------------
-inv         | *BitcoinInv*
-header      | *BitcoinHeader*
-pong        | *BitcoinPong*
-checkorder  | *BitcoinCheckorder*
-filterload  | *BitcoinFilterload*
 addr        | *BitcoinAddr*
-tx          | *BitcoinTx*
+alert       | *BitcoinAlert*
+block       | *BitcoinBlock*
+blocktxn    | *BitcoinBlocktxn*
+checkorder  | *BitcoinCheckorder*
+cmpctblock  | *BitcoinCmpctblock*
+feefilter   | *BitcoinFeefilter*
 filteradd   | *BitcoinFilteradd*
-ping        | *BitcoinPing*
+filterclear | *BitcoinFilterclear*
+filterload  | *BitcoinFilterload*
+getaddr     | *BitcoinGetaddr*
+getblocks   | *BitcoinGetblocks*
+getblocktxn | *BitcoinGetblocktxn*
+getdata     | *BitcoinGetdata*
 getheaders  | *BitcoinGetheaders*
-version     | *BitcoinVersion*
+header      | *BitcoinHeader*
+inv         | *BitcoinInv*
+mempool     | *BitcoinMempool*
+merkleblock | *BitcoinMerkleblock*
+notfound    | *BitcoinNotfound*
+ping        | *BitcoinPing*
+pong        | *BitcoinPong*
 reject      | *BitcoinReject*
 reply       | *BitcoinReply*
+sendcmpct   | *BitcoinSendcmpct*
 submitorder | *BitcoinSubmitorder*
-alert       | *BitcoinAlert*
-getaddr     | *BitcoinGetaddr*
-mempool     | *BitcoinMempool*
-getdata     | *BitcoinGetdata*
-getblocks   | *BitcoinGetblocks*
-notfound    | *BitcoinNotfound*
+tx          | *BitcoinTx*
 verack      | *BitcoinVerack*
-filterclear | *BitcoinFilterclear*
-block       | *BitcoinBlock*
+version     | *BitcoinVersion*
 
-**Note** : checkorder, submitorder, reply are deprecated in the current protocol version.
+
+**Note** : checkorder, submitorder, reply and alert are deprecated in the current protocol version.
 
 ## Usage example
 
